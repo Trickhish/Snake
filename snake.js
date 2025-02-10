@@ -23,8 +23,8 @@ function die() {
 
 function spawnFood() {
     var ind = rndPos();
-    var fx = ind%18;
-    var fy = Math.floor(ind/18);
+    fx = ind%18;
+    fy = Math.floor(ind/18);
 
     document.querySelectorAll(".cell.food").forEach((e)=>{
         e.classList.remove("food");
@@ -34,24 +34,34 @@ function spawnFood() {
 }
 
 function move() {
-    console.log("MOVE!");
+    //console.log("MOVE!");
+    //console.log(sncells.join(', '));
+
+    var adx=0;
+    var ady=0;
 
     if (sd=="up") {
-        sy--;
+        ady=-1;
     } else if (sd=="down") {
-        sy++;
+        ady=1;
     } else if (sd=="left") {
-        sx--;
+        adx=-1;
     } else { // right
-        sx++;
+        adx=1;
     }
+
+    sx+=adx;
+    sy+=ady;
+
     if (sx<0 || sy<0 || sx>=18 || sy>=18) {
         die();
         return;
     }
 
+    var foundFood=false;
     if (sx==fx && sy==fy) { // Found food
-
+        foundFood=true;
+        ntime=Math.max(0, ntime-5);
         spawnFood();
     }
 
@@ -66,14 +76,30 @@ function move() {
     cell.classList.add("snake");
     cell.classList.add("head");
 
+    //sncells[0][0]+=adx;
+    //sncells[0][1]+=ady;
+    sncells.splice(0, 0, [sx, sy]);
+
+    /*var i=0;
+    while (var i<sncells.length-1) {
+        sncells.splice(0, 0, [sncells[i][0]+adx, sncells[i][1]+ady]);
+        i++;
+    }
+    for (var i=0; i<sncells.length-1; i++) {
+
+    }*/
+    if (!foundFood) {
+        sncells.pop();
+    }
+
     for (let c of sncells) {
         let cx = c[0];
         let cy = c[1];
 
-        let cind = cy*18;
-
-        console.log(cx, cy, cind, cx*18, cind+cy);
-        cells[cind].classList.add("snake");
+        let cind = cy*18+cx;
+        if (cind<324) {
+            cells[cind].classList.add("snake");
+        }
     }
 
     mint = setTimeout(move, ntime);
