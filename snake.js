@@ -1,12 +1,14 @@
 var sx=9;
 var sy=18;
 var sd="up";
+var esd="";
 var mint=null;
 var ntime = 200;
 var fx=null;
 var fy=null;
 var sncells=[[9,18], [9,19], [9,20]];
 var cells=[];
+var started=false;
 
 function rndPos() {
     // 324 : 18x18
@@ -19,6 +21,8 @@ function die() {
     document.querySelectorAll(".cell.snake").forEach((e)=>{
         e.classList.add("dead");
     });
+
+    started=false;
 }
 
 function spawnFood() {
@@ -33,6 +37,15 @@ function spawnFood() {
     cells[ind].classList.add("food");
 }
 
+function isBitingTail(x, y) {
+    for (snc of sncells) {
+        if (snc[0]==x && snc[1]==y) {
+            return(true);
+        }
+    }
+    return(false);
+}
+
 function move() {
     //console.log("MOVE!");
     //console.log(sncells.join(', '));
@@ -40,6 +53,7 @@ function move() {
     var adx=0;
     var ady=0;
 
+    esd=sd;
     if (sd=="up") {
         ady=-1;
     } else if (sd=="down") {
@@ -53,7 +67,7 @@ function move() {
     sx+=adx;
     sy+=ady;
 
-    if (sx<0 || sy<0 || sx>=18 || sy>=18) {
+    if (sx<0 || sy<0 || sx>=18 || sy>=18 || isBitingTail(sx, sy)) {
         die();
         return;
     }
@@ -108,9 +122,21 @@ function move() {
 function start() {
     console.log("Starting game");
 
+    started=true;
+
+    document.querySelectorAll(".cell.snake").forEach((e)=>{
+        e.classList.remove("dead");
+        e.classList.remove("head");
+        e.classList.remove("snake");
+    });
+
+    ntime = 200;
+
     sx=9;
     sy=18;
     sd="up";
+    sncells=[[9,18], [9,19], [9,20]];
+
     cells=document.querySelectorAll(".cell");
 
     spawnFood();
@@ -119,14 +145,46 @@ function start() {
 }
 
 window.addEventListener("keydown", (ev)=>{
-    if (ev.key=="ArrowUp") {
+    if (ev.key=="ArrowUp" && esd!="down") {
         sd="up";
-    } else if (ev.key=="ArrowDown") {
+        if (started) {
+            if (esd!="up") {
+                clearTimeout(mint);
+                move();
+            }
+        } else {
+            start();
+        } 
+    } else if (ev.key=="ArrowDown" && esd!="up") {
         sd="down";
-    } else if (ev.key=="ArrowLeft") {
+        if (started) {
+            if (esd!="down") {
+                clearTimeout(mint);
+                move();
+            }
+        } else {
+            start();
+        } 
+    } else if (ev.key=="ArrowLeft" && esd!="right") {
         sd="left";
-    } else if (ev.key=="ArrowRight") {
+        if (started) {
+            if (esd!="left") {
+                clearTimeout(mint);
+                move();
+            }
+        } else {
+            start();
+        }  
+    } else if (ev.key=="ArrowRight" && esd!="left") {
         sd="right";
+        if (started) {
+            if (esd!="right") {
+                clearTimeout(mint);
+                move();
+            }
+        } else {
+            start();
+        }  
     }
 });
 
