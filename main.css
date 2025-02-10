@@ -1,0 +1,30 @@
+body {
+    background-color: rgb(20,20,20);
+}
+
+.board {
+    width: 540px;
+    height: 540px;
+    padding: 2px;
+    margin-left: -2px;
+    margin-top: -2px;
+    background-color: transparent;
+    box-shadow: 0 0 6px 2px black;
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+}
+
+.cell {
+    width: 28px;
+    height: 28px;
+    float:left;
+    margin: 1px;
+    background-color: #616161;
+    border-radius: 4px;
+}
