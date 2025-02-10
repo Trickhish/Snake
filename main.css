@@ -28,3 +28,24 @@ body {
     background-color: #616161;
     border-radius: 4px;
 }
+
+.snake {
+    background-color: #26ab25;
+    border-radius: 50px;
+    scale: 0.8;
+}
+
+.snake.head {
+    background-color: #26ab25;
+    border-radius: 50px;
+    scale:1;
+}
+
+.snake.dead {
+    background-color: red !important;
+}
+
+.food {
+    background-image: url(avocado.png);
+    background-size: contain;
+}
