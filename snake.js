@@ -25,6 +25,31 @@ function die() {
     started=false;
 }
 
+async function pathFind(x,y,dx,dy) {
+    var adx=0;
+    if (dx>x) {
+        adx=1;
+    } else if (dx<x) {
+        adx=-1;
+    }
+
+    var ady=0;
+    if (dy>y) {
+        ady=1;
+    } else if (dy<y) {
+        ady=-1;
+    }
+
+    for (var xi=x; xi!=dx; xi+=adx) {
+        var ac = cells[y*18+xi];
+        ac.classList.add("path");
+    }
+    for (var yi=y; yi!=dy; yi+=ady) {
+        var ac = cells[yi*18+dx];
+        ac.classList.add("path");
+    }
+}
+
 function spawnFood() {
     var ind = rndPos();
     fx = ind%18;
@@ -33,6 +58,8 @@ function spawnFood() {
     document.querySelectorAll(".cell.food").forEach((e)=>{
         e.classList.remove("food");
     });
+
+    pathFind(sx,sy,fx,fy);
 
     cells[ind].classList.add("food");
 }
@@ -76,6 +103,11 @@ function move() {
     if (sx==fx && sy==fy) { // Found food
         foundFood=true;
         ntime=Math.max(0, ntime-5);
+
+        document.querySelectorAll(".cell.path").forEach((e)=>{
+            e.classList.remove("path");
+        });
+
         spawnFood();
     }
 
